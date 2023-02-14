@@ -1,0 +1,81 @@
+More news at: https://medium.com/me/stories/public
+
+Today, we begin from formatted output.
+
+C's tranditional printf() function, which we've been using the first day, prints or writes formatted output to standard output. 
+If we see its prototype, we'll see:
+
+int printf(const char *format, ...);
+
+It means either a simple string or a string containing percent signs and other characters which cause the formatted value of printf()'s other arguments to be interpersed with the other text of the format string.
+
+So far, we merely use some simple format specifiers like %d for int or long int, %f for float or double, and %s for string. But format specifiers can actually contain several parts:
+
+Field width -- i.e. %5f prints an integar in a field five characters wide.
+Precision -- i.e. %.2f formats a floating-point number with two digits printed after the decimal point.
+
+You can also add certain characters which specify various options like
+%-5d:  the padding characters should be added after the field's value (so that it's left-justified)
+%ld: printing a long int instead of a plain one
+
+Formally, then, the complete framework for a printf format specifier looks like:
+
+% flags width . precision modifier character 
+
+The width gives the minimum overall width of the output.
+If the output is less than width, it would be padded with trailing spaces.
+however, the field essentially overflows or grows; the output is not truncated or anything. 
+
+printf(%2d, 123456) --> 123456
+
+The precision is:
+
+For the floating-point formats %e, %f, and %g are the number of digits printed after the decimal point. For example, printf("%.5f", 1.234567); --> 1.23457
+For %s, responed to char *string, The maximum number of characters to be printed. For example, printf("%.3s", "ABCDEFG"); --> ABC
+For the integer formats %d, %o, %x, and %u, The minimum number of digits to be printed.  For example, printf("%.6d", 1);  --> 000001
+
+Either the width or the precision (or both) can be specified as *, which indicates that the next int argument from the argument list should be used as the field width or precision. 
+
+i.e. printf("% *d", 3, 1);  --> two spaced preceeds 1  (three width)
+     printf("%.*d", 3, 1);  --> 001
+     printf("%.*d", 3, 100000); --> will not be truncated, 100000
+     
+     
+What's more,
+The flags are a few optional characters which modify the conversion in some way.
+
+o Print an unsigned integer, in octal (base 8) with an unsigned int or an unsigned long int
+If the # flag appears, and the number is nonzero, it will be preceded by an extra 0, to make it look like a C octal constant.
+printf("%#o", 8); --> 010
+
+x Print an unsigned integer, in hexadecimal (base 16) with an unsigned int or long int
+If the # flag appears, and the number is nonzero, it will be preceded by an extra 0x, to make it look like a C hexdecimal constant.
+printf("%#o", 16); --> 0x10
+
+p Print a pointer value (the pointer, not what it points to) corresponded argument to void *.
+Usually, the value printed is the numeric value of the pointer--that is, the memory address pointed to--in hexadecimal.
+
+i.e.
+int n = 3;
+int *ptr = &n;
+
+printf("%p", &n); --> print out ptr's address not value's address pointed to by p.
+
+Another variations of printf() are fprintf() and sprintf():
+
+int fprintf(FILE *file, const char *format, ...); 
+
+int sprintf(char *dest, const char *format, ...);
+
+Their difference is sprintf() only print to an "in-memory" string rather than to a FILE *Stream.
+
+For example,
+
+int i = 123;
+char string[20];
+sprintf(string, "%d", i);
+
+One thing to be sure with sprintf(), is that the destination string is big enough.
+
+
+
