@@ -1,0 +1,45 @@
+Sometimes, you might want to read a chunk of characters not line by line and certainly without doing scanf-like parsing. 
+Similarily, you might want to write an arbitrary chunk of characters, not as a string or line. (Furthermore, the chunk might contain /0 characters which would otherwise terminate a string).
+
+In these situations, you might want fread() or fwrite().
+
+fread's prototype:
+
+	size_t fread(void *buf, size_t sz, size_t n, FILE *fp);
+  
+void * - a generic pointer (type returned by malloc) can point to anything.
+size_t - a type guanranteed to be able to hold the size of any object (i.e. as returned by the sizeof operator); 
+
+That is,
+/* fread reads up to n objects with size sz, from the stream fp, and copies them to the buffer pointed to by buf. */
+
+It reads them as a stream of bytes, without doing any particular formatting or other interpretation. However, the stdio library may still translate newline characters unless the file opened in binary mode. "b"
+
+/* fread returns the number of items read. It returns 0 (not EOF) at end-of-file. */
+
+fwrite's prototype:
+
+  size_t fwrite(void *buf, size_t sz, size_t n, FILE *fp);
+  
+If what you want to do is read n characters:
+
+1. call sz as 1
+2. buf pointing to an array of at least n characters.
+
+return value will be in units of characters. 
+
+What's more, you can use fread and fwrite in binary mode not as strings like printf():
+
+For example, if you had a variable of some structure type:
+
+struct somestruct x;
+
+write it out all at once by calling:
+
+/* fwrite(&x, sizeof(struct somestruct), 1, fp); */
+
+ read it in by calling:
+ 
+ /* fread(&x, sizeof(struct somestruct), 1, fp); */
+ 
+ Though the above methods with fread() and fwrite() look easy and convenient, it has a number of drawbacks, some of which we'll discuss tomorrow.
