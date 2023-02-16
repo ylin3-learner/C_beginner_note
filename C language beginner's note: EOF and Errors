@@ -1,0 +1,68 @@
+When a function return EOF (or 0 or NULL, as in the case of fread and fgets respectively), 
+we commonly say that we have reached ``end of file,'' but it turns out that it's also possible that there's been some kind of I/O error. 
+
+
+ end-of-file: feof();
+ error: ferror();
+ 
+ /* However, notice that feof returns nonzero if end-of-file has been reached. */
+ 
+ It does not tell you that the next attempt to read from the stream will reach end-of-file, 
+ but rather that the previous attempt (by some other function) already did.
+ 
+ So, though it seems that it can write like this:
+ 
+ while(!feof(fp)) {
+  fgets(line, max, fp);
+  }
+  
+ But you can write the input function more directly:
+ 
+ while(fgets(line, max, fp) != NULL) ...
+ 
+ In short, you use feof or ferror to distinguish between end-of-file and error. 
+ 
+ /* What should your program do if it detects an I/O error? */
+ 
+ fp = fopen(filename, "r");
+	if(fp == NULL)
+		{
+		fprintf(stderr, "can't open file\n");
+		return;
+		}
+    
+=========================OR===================================
+
+while(fgets(line, max, fp) != NULL) {
+  ... process input
+}
+
+if (ferror(fp)) {
+  fprintf(stderr, "error reading input\n");
+}
+
+=========================OR===================================
+
+Sometimes, Error messages are much more useful, however, if they include a bit more information, such as the name of the file for which the operation is failing, 
+and if possible why it is failing.
+
+/******************************
+
+#include<stdio.h> /* for fopen */
+#include<errno.h> /* for errno */
+#include <string.h>	/* for strerror */
+
+fp = fopen(filename, "r");
+
+if(fp != NULL) {
+  .... preocess input
+} else {
+  fprintf(stderr, "can't open %s for reading: %s\n", filename, stderrno(errno));
+  exit(1);
+}
+
+errno is a global variable, declared in <errno.h>
+contain a numeric code indicating the reason for a recent system-related error such as inability to open a file. 
+*********************************/
+
+
