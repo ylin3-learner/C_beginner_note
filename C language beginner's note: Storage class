@@ -1,0 +1,36 @@
+Storage Classes
+
+A full-blown declaration in C consists of several parts: the storage class, the base type, any type qualifiers, and a list of declarators
+
+We've seen two storage classes so far, extern and static.
+
+extern marks a declaration as an external declaration, indicating that the identifier declared has its defining instance somewhere else (where ``somewhere else'' might be somewhere else
+
+static is used in two different ways, (1) to indicate that a global (``file scope'') variable is private to one source file, and cannot be accessed (even with external declarations) from other source files, or (2) to indicate that a local variable should have static duration, such that it does not come and go as the function is called and returns, and so that its value persists between invocations of the function.
+
+Besides these two, there are three other storage classes. 
+
+1. register indicates that the programmer believes that the variable will be heavily used, and that it should be assigned to a high-speed CPU register (rather than an ordinary memory location) if possible.
+2. A limitation of register variables is that you cannot generate pointers to them using the & operator. (This is because, on most machines, pointers are implemented as memory addresses, and CPU registers usually do not have memory addresses.)
+3. auto, which indicates that a local variable should have automatic duration. (Automatic duration, remember, means that variables are automatically allocated when a function is called and automatically deallocated when it returns.) Since automatic duration is the default for local variables anyway, auto is virtually never used; it's a relic from C's past.
+4. typedef, is described in the next section.
+
+Instead of declaring a variable named count, we are declaring a new type named count. 
+(Actually, we're just declaring a new name for an old type; you can think of typedef names as type aliases.) 
+
+define a structure and a typedef tag for it at the same time:
+
+    typedef struct complex
+		{
+		double real;
+		double imag;
+		} complextype;
+    
+when using typedef names, you may not need the structure tag at all; you can also write:
+
+
+    typedef struct
+		{
+		double real;
+		double imag;
+		} complextype;
