@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void Swap(void *first, void *second, size_t size) {
+    void *temp = malloc(size);
+    
+    if(temp) {
+        memcpy(temp, first, size);
+        memcpy(first, second, size);
+        memcpy(second, temp, size);
+        
+        free(temp);
+    } else abort();
+}
+
+int Partition(int *array, int low, int high) {
+    int pivot = array[high];
+    
+    int partition = low;
+    for(int i=low; i<=high; i++) {
+        if (array[i] < pivot) {
+            Swap(array+i, array+partition, sizeof(int));
+            partition++;
+        }
+    }
+    Swap(array+partition, array+high, sizeof(int));
+    
+    return partition;
+}
+
+void QuickSort(int *array, int low, int high) {
+    if (low >= high) return;
+    
+    int partition = Partition(array, low, high);
+    QuickSort(array, low, partition - 1);
+    QuickSort(array, partition + 1, high);
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    
+    int *array = malloc(sizeof(int) * n);
+    for(int i=0; i< n; ++i) {
+        scanf("%d", &array[i]);
+    }
+    
+    int i=0;
+    do {
+        printf("%d ", array[i++]);
+    } while(i < n);
+    puts("\n");
+    
+    QuickSort(array, 0, n-1);
+    
+    int j=0;
+    do {
+        printf("%d ", array[j++]);
+    } while(j < n);
+    
+    return 0;
+}
