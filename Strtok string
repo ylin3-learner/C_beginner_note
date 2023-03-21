@@ -1,0 +1,64 @@
+/*
+Use strtok to access piece of strings
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Language {
+    char *language_name;
+    int year;
+} Language;
+
+int main()
+{
+    char string[] = "C, 1972; C++, 1983; Java, 1995; Rust, 2010; Kotlin, 2011;";
+    
+    const char *language_break = ";";
+    const char *field_break = ",";
+    
+    int language_capacity = 3;
+    int language_count = 0;
+    
+    Language *languages = malloc(sizeof(Language) * language_capacity);
+    if (!languages) {
+        fprintf(stderr, "out of memory ");
+        abort();
+    }
+    
+    char *next = strtok(string, field_break);
+    
+    while(next) {
+        Language language;
+        language.language_name = next;
+        
+        next = strtok(NULL, language_break);
+        if (next) {
+            language.year = atoi(next);
+            
+            if (language_count + 1 > language_capacity) {
+                language_capacity *= 2;
+                
+                languages = realloc(languages, sizeof(Language) * language_capacity);
+                
+                if (!languages) {
+                    fprintf(stderr, "out of memory");
+                    abort();
+                }
+            }
+            
+            languages[language_count++] = language;
+            
+            next = strtok(NULL, field_break);
+        }
+    }
+    
+    printf("%d\n", language_count);
+    printf("%d\n", language_capacity);
+    
+    for(int i=0; i < language_count; ++i) {
+        printf("languages[language_name=%s, year=%d]\n", languages[i].language_name, languages[i].year);
+    }
+    return 0;
+}
